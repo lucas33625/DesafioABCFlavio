@@ -59,6 +59,12 @@
 			<version>8.0.29</version> <!-- Ou a versão mais recente -->
 			<scope>runtime</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.30</version> <!-- Ou mantenha sua versão atual -->
+			<scope>provided</scope>
+		</dependency>
 
 
 		<dependency>
