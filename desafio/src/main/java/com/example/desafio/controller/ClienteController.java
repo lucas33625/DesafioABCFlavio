@@ -10,19 +10,19 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/clientes")  // A URL base para as APIs será /api/clientes
+@RequestMapping("/api/clientes")
 public class ClienteController {
 
     @Autowired
     private ClienteDAO clienteDAO;
 
-    // API para listar todos os clientes
+
     @GetMapping
     public List<Cliente> listarClientes() {
         return clienteDAO.listarClientes();
     }
 
-    // API para buscar cliente por ID
+
     @GetMapping("/{id}")
     public ResponseEntity<Cliente> buscarCliente(@PathVariable Long id) {
         Cliente cliente = clienteDAO.buscarClientePorId(id);
@@ -33,14 +33,14 @@ public class ClienteController {
         }
     }
 
-    // API para inserir um novo cliente
+
     @PostMapping
     public ResponseEntity<Cliente> inserirCliente(@RequestBody Cliente cliente) {
         clienteDAO.inserirCliente(cliente);
         return new ResponseEntity<>(cliente, HttpStatus.CREATED);
     }
 
-    // API para atualizar um cliente existente
+
     @PutMapping("/{id}")
     public ResponseEntity<Cliente> atualizarCliente(@PathVariable Long id, @RequestBody Cliente cliente) {
         Cliente clienteExistente = clienteDAO.buscarClientePorId(id);
@@ -53,7 +53,7 @@ public class ClienteController {
         }
     }
 
-    // API para deletar um cliente
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletarCliente(@PathVariable Long id) {
         Cliente clienteExistente = clienteDAO.buscarClientePorId(id);

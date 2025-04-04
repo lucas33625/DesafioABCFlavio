@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public class ClienteDAO {
 
-    // CREATE - Inserir Cliente
+
     public void inserirCliente(Cliente cliente) {
         String sql = "INSERT INTO clientes (name, email, phoneNumber) VALUES (?, ?, ?)";
         try (Connection conn = ConexaoBD.getConnection();
@@ -22,7 +22,7 @@ public class ClienteDAO {
             stmt.setString(3, cliente.getPhoneNumber());
             stmt.executeUpdate();
 
-            // Obtém o ID gerado pelo banco
+
             try (ResultSet rs = stmt.getGeneratedKeys()) {
                 if (rs.next()) {
                     cliente.setId(rs.getLong(1));
@@ -33,7 +33,7 @@ public class ClienteDAO {
         }
     }
 
-    // READ - Buscar Cliente por ID
+
     public Cliente buscarClientePorId(Long id) {
         String sql = "SELECT * FROM clientes WHERE id = ?";
         try (Connection conn = ConexaoBD.getConnection();
@@ -56,7 +56,7 @@ public class ClienteDAO {
         return null;
     }
 
-    // READ - Listar Todos os Clientes
+
     public List<Cliente> listarClientes() {
         List<Cliente> clientes = new ArrayList<>();
         String sql = "SELECT * FROM clientes";
@@ -79,7 +79,7 @@ public class ClienteDAO {
         return clientes;
     }
 
-    // UPDATE - Atualizar Cliente
+
     public void atualizarCliente(Cliente cliente) {
         String sql = "UPDATE clientes SET name = ?, email = ?, phoneNumber = ? WHERE id = ?";
 
@@ -97,7 +97,7 @@ public class ClienteDAO {
         }
     }
 
-    // DELETE - Remover Cliente
+
     public void deletarCliente(Long id) {
         String sql = "DELETE FROM clientes WHERE id = ?";
 
