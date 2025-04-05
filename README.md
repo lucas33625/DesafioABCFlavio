@@ -27,7 +27,8 @@ Ele permite operações básicas de CRUD utilizando banco de dados MySQL, com um
 
 ## 📂 Estrutura do Projeto
 
-/
+```
+/ 
 ├── desafio-backend/               # Projeto Spring Boot (API REST)
 │   ├── .mvn/                      # Configurações do Maven Wrapper
 │   ├── src/
@@ -57,3 +58,4 @@ Ele permite operações básicas de CRUD utilizando banco de dados MySQL, com um
 │
 ├── README.md                     # Documentação do projeto
 └── .gitignore
+```
