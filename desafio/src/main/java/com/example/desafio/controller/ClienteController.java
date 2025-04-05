@@ -35,14 +35,21 @@ public class ClienteController {
 
 
     @PostMapping
-    public ResponseEntity<Cliente> inserirCliente(@RequestBody Cliente cliente) {
-        clienteDAO.inserirCliente(cliente);
-        return new ResponseEntity<>(cliente, HttpStatus.CREATED);
+    public ResponseEntity<Object> inserirCliente(@RequestBody Cliente cliente) {
+
+        if (cliente.getName() == null || cliente.getEmail() == null || cliente.getPhoneNumber() == null) {
+            return new ResponseEntity<>("Os campos nome, email e telefone não podem ser nulos.", HttpStatus.BAD_REQUEST);
+        }
+        if (clienteDAO.inserirCliente(cliente)) {
+            return new ResponseEntity<>(cliente, HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<Cliente> atualizarCliente(@PathVariable Long id, @RequestBody Cliente cliente) {
+    public ResponseEntity<Object> atualizarCliente(@PathVariable Long id, @RequestBody Cliente cliente) {
         Cliente clienteExistente = clienteDAO.buscarClientePorId(id);
         if (clienteExistente != null) {
             cliente.setId(id);  // Certifique-se de que o ID correto está sendo atualizado
@@ -55,13 +62,13 @@ public class ClienteController {
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletarCliente(@PathVariable Long id) {
+    public ResponseEntity<?> deletarCliente(@PathVariable Long id) {
         Cliente clienteExistente = clienteDAO.buscarClientePorId(id);
         if (clienteExistente != null) {
             clienteDAO.deletarCliente(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);  // 204 No Content
+            return new ResponseEntity<>(HttpStatus.OK);  // 204 No Content
         } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Id não encontrado!",HttpStatus.NOT_FOUND);
         }
     }
 }

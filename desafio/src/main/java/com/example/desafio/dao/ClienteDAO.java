@@ -12,7 +12,7 @@ import java.util.List;
 public class ClienteDAO {
 
 
-    public void inserirCliente(Cliente cliente) {
+    public boolean inserirCliente(Cliente cliente) {
         String sql = "INSERT INTO clientes (name, email, phoneNumber) VALUES (?, ?, ?)";
         try (Connection conn = ConexaoBD.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -28,9 +28,11 @@ public class ClienteDAO {
                     cliente.setId(rs.getLong(1));
                 }
             }
+            return true;
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return false;
     }
 
 
