@@ -2,8 +2,11 @@ package com.example.desafio.controller;
 
 import com.example.desafio.dao.ClienteDAO;
 import com.example.desafio.model.Cliente;
+import com.example.desafio.relatorios.RelatorioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +18,8 @@ public class ClienteController {
 
     @Autowired
     private ClienteDAO clienteDAO;
+    @Autowired
+    private RelatorioService relatorioService;
 
 
     @GetMapping
@@ -71,4 +76,72 @@ public class ClienteController {
             return new ResponseEntity<>("Id não encontrado!",HttpStatus.NOT_FOUND);
         }
     }
+
+//    @GetMapping("/relatorio/pdf")
+//    public ResponseEntity<String> gerarRelatorio() {
+//        try {
+//            List<Cliente> clientes = clienteDAO.listarClientes();
+//            relatorioService.gerarRelatorioClientes(clientes);
+//            return ResponseEntity.ok("Relatório gerado com sucesso!");
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro: " + e.getMessage());
+//        }
+//    }
+//
+//    @GetMapping("/{id}/relatorio/docx")
+//    public ResponseEntity<String> gerarDocx(@PathVariable Long id) {
+//        Cliente cliente = clienteDAO.buscarClientePorId(id);
+//        if (cliente != null) {
+//            try {
+//                relatorioService.gerarRelatorioDetalheCliente(cliente);
+//                return ResponseEntity.ok("DOCX gerado com sucesso.");
+//            } catch (Exception e) {
+//                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao gerar DOCX: " + e.getMessage());
+//            }
+//        } else {
+//            return new ResponseEntity<>("Cliente não encontrado.", HttpStatus.NOT_FOUND);
+//        }
+//    }
+
+    @GetMapping("/relatorio/pdf")
+    public ResponseEntity<byte[]> gerarRelatorio() {
+        try {
+            List<Cliente> clientes = clienteDAO.listarClientes();
+            byte[] pdfBytes = relatorioService.gerarRelatorioClientes(clientes);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_PDF);
+            headers.add("Content-Disposition", "attachment; filename=relatorio-clientes.pdf");
+
+            return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace(); // <-- Mostra erro no console
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+
+    @GetMapping("/{id}/relatorio/docx")
+    public ResponseEntity<byte[]> gerarDocx(@PathVariable Long id) {
+        Cliente cliente = clienteDAO.buscarClientePorId(id);
+        if (cliente != null) {
+            try {
+                byte[] docxBytes = relatorioService.gerarRelatorioDetalheCliente(cliente); // retorna byte[]
+
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+                headers.add("Content-Disposition", "attachment; filename=cliente_" + id + ".docx");
+
+                return new ResponseEntity<>(docxBytes, headers, HttpStatus.OK);
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            }
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+
+
+
 }

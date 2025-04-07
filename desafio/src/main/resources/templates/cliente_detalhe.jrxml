@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.17.0.final using JasperReports Library version 6.17.0-6d93193241dd8cc42629e188b94f9e0bc5722efd  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="cliente_detalhe" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a1234567-b89c-40d1-90ab-abcdef123456">
+	<field name="name" class="java.lang.String"/>
+	<field name="email" class="java.lang.String"/>
+	<field name="phoneNumber" class="java.lang.String"/>
+	<title>
+		<band height="60">
+			<staticText>
+				<reportElement x="0" y="10" width="555" height="30" uuid="9f07c96f-aca4-417f-808d-959061bae6b3"/>
+				<text><![CDATA[Detalhes do Cliente]]></text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="100">
+			<textField>
+				<reportElement x="0" y="10" width="555" height="20" uuid="d3531d15-fa1a-4fe3-84d9-b718ab532844"/>
+				<textFieldExpression><![CDATA["Nome: " + $F{name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="30" width="555" height="20" uuid="84a83a62-e933-4fc4-b83e-3494b08e70f1"/>
+				<textFieldExpression><![CDATA["Email: " + $F{email}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="50" width="555" height="20" uuid="9261909e-55f9-4240-9525-c63a1df7394c"/>
+				<textFieldExpression><![CDATA["Telefone: " + $F{phoneNumber}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>
