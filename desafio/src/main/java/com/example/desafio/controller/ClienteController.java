@@ -3,6 +3,7 @@ package com.example.desafio.controller;
 import com.example.desafio.dao.ClienteDAO;
 import com.example.desafio.model.Cliente;
 import com.example.desafio.relatorios.RelatorioService;
+import com.example.desafio.services.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,8 @@ public class ClienteController {
     private ClienteDAO clienteDAO;
     @Autowired
     private RelatorioService relatorioService;
+    @Autowired
+    private EmailService emailService;
 
 
     @GetMapping
@@ -41,16 +44,19 @@ public class ClienteController {
 
     @PostMapping
     public ResponseEntity<Object> inserirCliente(@RequestBody Cliente cliente) {
-
         if (cliente.getName() == null || cliente.getEmail() == null || cliente.getPhoneNumber() == null) {
             return new ResponseEntity<>("Os campos nome, email e telefone não podem ser nulos.", HttpStatus.BAD_REQUEST);
         }
+
         if (clienteDAO.inserirCliente(cliente)) {
+            // Enviar o e-mail somente após salvar com sucesso
+            emailService.enviarEmailCadastro(cliente);
             return new ResponseEntity<>(cliente, HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
 
     @PutMapping("/{id}")
@@ -140,8 +146,6 @@ public class ClienteController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
-
 
 
 }

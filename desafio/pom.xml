@@ -61,6 +61,11 @@
 			<version>4.1.0</version> <!-- Compatível com Java 8 -->
 		</dependency>
 
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
+
 		<!-- Exportação para PDF -->
 		<dependency>
 			<groupId>com.lowagie</groupId>
