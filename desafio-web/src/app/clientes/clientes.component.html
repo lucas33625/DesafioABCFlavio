@@ -1,0 +1,82 @@
+<p-toast></p-toast>
+<div class="container">
+  <div class="form-container">
+    <h3>Adicionar Cliente</h3>
+    <span class="ui-float-label">
+      <input id="nome" type="text" size="30" pInputText [(ngModel)]="nome" />
+      <label for="nome">Nome</label>
+    </span>
+
+    <span class="ui-float-label">
+      <input id="telefone" type="text" size="30" pInputText pInputMask mask="(99) 99999-9999" [(ngModel)]="telefone" />
+      <label for="telefone">Telefone</label>
+    </span>
+
+    <span class="ui-float-label">
+      <input id="email" type="text" size="30" pInputText [(ngModel)]="email" required email />
+      <label for="email">Email</label>
+    </span>
+
+    <button pButton type="button" label="Adicionar" (click)="handleClick()" [disabled]="!isFormValid()"></button>
+  </div>
+
+  <div class="cliente-list">
+    <div class="header">
+      <h2>Lista de Clientes</h2>
+      <button
+        pButton
+        type="button"
+        icon="pi pi-download"
+        label="Baixar PDF Geral"
+        class="p-button-success"
+        class="p-button-success subir-5"
+        (click)="gerarPDF()"
+      ></button>
+
+    </div>
+
+    <p-table [value]="clientes" [paginator]="true" [rows]="10" responsiveLayout="scroll">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Nome</th>
+          <th>Email</th>
+          <th>Telefone</th>
+          <th>Ações</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-cliente>
+        <tr>
+          <td>{{ cliente.name }}</td>
+          <td>{{ cliente.email }}</td>
+          <td>{{ cliente.phoneNumber }}</td>
+          <td>
+            <div class="button-group">
+              <button
+                pButton
+                type="button"
+                icon="pi pi-pencil"
+                class="small-btn edit-btn"
+                (click)="updateClient(cliente)"
+              ></button>
+              <button
+                pButton
+                type="button"
+                icon="pi pi-trash"
+                class="small-btn delete-btn"
+                (click)="deleteCliente(cliente)"
+              ></button>
+              <button
+                pButton
+                type="button"
+                icon="pi pi-file-word"
+                class="small-btn docx-btn"
+                (click)="gerarDOCX(cliente.id)"
+                label="DOCX"
+              ></button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
