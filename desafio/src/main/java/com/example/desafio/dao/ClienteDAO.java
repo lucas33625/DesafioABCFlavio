@@ -3,6 +3,7 @@ package com.example.desafio.dao;
 
 import com.example.desafio.model.Cliente;
 import com.example.desafio.util.ConexaoBD;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -11,6 +12,12 @@ import java.util.List;
 @Repository
 public class ClienteDAO {
 
+
+    private final JdbcTemplate jdbcTemplate;
+
+    public ClienteDAO(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public boolean inserirCliente(Cliente cliente) {
         String sql = "INSERT INTO clientes (name, email, phoneNumber) VALUES (?, ?, ?)";
@@ -81,8 +88,31 @@ public class ClienteDAO {
         return clientes;
     }
 
+    public boolean emailExist(String email) {
+        String sql = "SELECT COUNT(*) FROM clientes WHERE email = ?";
 
-    public void atualizarCliente(Cliente cliente) {
+        try (Connection conn = ConexaoBD.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            // Configura o parâmetro da consulta
+            stmt.setString(1, email);
+
+            // Executa a consulta e obtém o resultado
+            ResultSet rs = stmt.executeQuery();
+
+            // Verifica se o email existe no banco
+            if (rs.next()) {
+                int count = rs.getInt(1); // O resultado da contagem estará na primeira coluna
+                return count > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+
+    public boolean atualizarCliente(Cliente cliente) {
         String sql = "UPDATE clientes SET name = ?, email = ?, phoneNumber = ? WHERE id = ?";
 
         try (Connection conn = ConexaoBD.getConnection();
@@ -94,9 +124,11 @@ public class ClienteDAO {
             stmt.setLong(4, cliente.getId());
 
             stmt.executeUpdate();
+            return true;
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return false;
     }
 
 

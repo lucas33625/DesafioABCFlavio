@@ -39,4 +39,8 @@ export class ClienteService {
       responseType: 'blob'
     });
   }
+  checkEmailExists(email: string): Observable<boolean> {
+    return this.http.get<boolean>(`${this.apiUrl}/clientes/email-existe?email=${email}`);
+  }
+
 }

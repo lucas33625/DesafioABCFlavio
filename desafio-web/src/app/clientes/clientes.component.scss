@@ -61,13 +61,11 @@ td {
 }
 
 /* Define larguras fixas por coluna */
-th:nth-child(1), td:nth-child(1) { width: 200px; } /* Nome */
-th:nth-child(2), td:nth-child(2) { width: 250px; } /* Email */
-th:nth-child(3), td:nth-child(3) { width: 150px; } /* Telefone */
-th:nth-child(4), td:nth-child(4) {
-  width: 180px;
-  text-align: center;
-}
+th:nth-child(1), td:nth-child(1) { width: 25%; }
+th:nth-child(2), td:nth-child(2) { width: 35%; }
+th:nth-child(3), td:nth-child(3) { width: 20%; }
+th:nth-child(4), td:nth-child(4) { width: 20%; text-align: center; }
+
 
 
 
@@ -103,7 +101,7 @@ th:nth-child(4), td:nth-child(4) {
 }
 
 .delete-btn {
-  background-color: #d9534f;
+  background-color: #ff0600;
   color: white;
   border: none;
 }

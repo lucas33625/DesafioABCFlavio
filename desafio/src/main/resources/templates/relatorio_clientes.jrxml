@@ -1,48 +1,40 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.17.0.final using JasperReports Library version 6.17.0-6d93193241dd8cc42629e188b94f9e0bc5722efd  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="relatorio_clientes" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a1234567-b89c-40d1-90ab-abcdef123456">
+<!-- Created with Jaspersoft Studio version 7.0.2.final using JasperReports Library version 7.0.2-31532122640f516c6d17238ae0e41a08113d5ac0  -->
+<jasperReport name="relatorio_clientes" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a1234567-b89c-40d1-90ab-abcdef123456">
 	<parameter name="nomeRelatorio" class="java.lang.String"/>
 	<field name="name" class="java.lang.String"/>
 	<field name="email" class="java.lang.String"/>
 	<field name="phoneNumber" class="java.lang.String"/>
-	<title>
-		<band height="50">
-			<textField>
-				<reportElement x="0" y="10" width="555" height="30" uuid="58867838-ad62-48b6-ad4d-40d87a1ffc89"/>
-				<textFieldExpression><![CDATA[$P{nomeRelatorio}]]></textFieldExpression>
-			</textField>
-		</band>
-	</title>
-	<columnHeader>
-		<band height="30">
-			<staticText>
-				<reportElement x="0" y="0" width="185" height="30" uuid="c7b970f4-9537-45c4-b863-5db47bdf7975"/>
-				<text><![CDATA[Nome]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="185" y="0" width="185" height="30" uuid="e2757d09-c421-43a0-ac7c-5f23fb3428a6"/>
-				<text><![CDATA[E-mail]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="370" y="0" width="185" height="30" uuid="a1af5a99-6c5f-4b40-973f-634c999f64f8"/>
-				<text><![CDATA[Telefone]]></text>
-			</staticText>
-		</band>
+	<pageHeader height="72">
+		<element kind="image" uuid="30e858c9-b514-4cca-a1b4-7e9e57415411" x="10" y="0" width="70" height="72">
+			<expression><![CDATA["/src/main/resources/templates/img/logo.jpeg"]]></expression>
+		</element>
+		<element kind="image" uuid="1f096c3d-b7f4-4b9a-91a8-2a39f674ef6e" x="130" y="0" width="345" height="71">
+			<expression><![CDATA["/src/main/resources/templates/img/abc_technology_des_sol_empresariais_ltda_cover.jpeg"]]></expression>
+		</element>
+	</pageHeader>
+	<columnHeader height="90">
+		<element kind="staticText" uuid="c7b970f4-9537-45c4-b863-5db47bdf7975" x="0" y="60" width="185" height="30">
+			<text><![CDATA[Nome]]></text>
+		</element>
+		<element kind="staticText" uuid="e2757d09-c421-43a0-ac7c-5f23fb3428a6" x="185" y="60" width="185" height="30">
+			<text><![CDATA[E-mail]]></text>
+		</element>
+		<element kind="staticText" uuid="a1af5a99-6c5f-4b40-973f-634c999f64f8" x="370" y="60" width="185" height="30">
+			<text><![CDATA[Telefone]]></text>
+		</element>
 	</columnHeader>
 	<detail>
 		<band height="20">
-			<textField>
-				<reportElement x="0" y="0" width="185" height="20" uuid="74b9907e-1aa3-435c-b3b0-ada01070523b"/>
-				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="185" y="0" width="185" height="20" uuid="72a193e9-29fb-4a75-9648-ed08c9c7178e"/>
-				<textFieldExpression><![CDATA[$F{email}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="370" y="0" width="185" height="20" uuid="3b045367-8af0-4096-8422-9f7a4eedfb8c"/>
-				<textFieldExpression><![CDATA[$F{phoneNumber}]]></textFieldExpression>
-			</textField>
+			<element kind="textField" uuid="74b9907e-1aa3-435c-b3b0-ada01070523b" x="0" y="60" width="185" height="20">
+				<expression><![CDATA[$F{name}]]></expression>
+			</element>
+			<element kind="textField" uuid="72a193e9-29fb-4a75-9648-ed08c9c7178e" x="185" y="60" width="185" height="20">
+				<expression><![CDATA[$F{email}]]></expression>
+			</element>
+			<element kind="textField" uuid="3b045367-8af0-4096-8422-9f7a4eedfb8c" x="370" y="60" width="185" height="20">
+				<expression><![CDATA[$F{phoneNumber}]]></expression>
+			</element>
 		</band>
+		<band height="50"/>
 	</detail>
 </jasperReport>

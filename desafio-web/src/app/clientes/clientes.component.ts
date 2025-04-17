@@ -63,32 +63,75 @@ export class ClientesComponent implements OnInit {
       phoneNumber: this.telefone
     };
 
-    if (this.clienteId) {
-      // Atualiza o cliente existente
-      this.clienteService.updateClient(cliente).subscribe(() => {
-        this.list();
-        this.resetForm();
+    // Verifica se o email já está em uso
+    this.clienteService.checkEmailExists(cliente.email).subscribe({
+      next: (emailExists) => {
+        if (emailExists) {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: 'Este email já está em uso. Por favor, use um email diferente.',
+            life: 3000
+          });
+        } else {
+          if (this.clienteId) {
+            // Atualiza o cliente existente
+            this.clienteService.updateClient(cliente).subscribe({
+              next: () => {
+                this.list();
+                this.resetForm();
+                this.messageService.add({
+                  severity: 'success',
+                  summary: 'Atualizado',
+                  detail: 'Cliente atualizado com sucesso!',
+                  life: 3000
+                });
+              },
+              error: () => {
+                this.messageService.add({
+                  severity: 'error',
+                  summary: 'Erro',
+                  detail: 'Erro ao atualizar o cliente.',
+                  life: 3000
+                });
+              }
+            });
+          } else {
+            // Adiciona um novo cliente
+            this.clienteService.addCliente(cliente).subscribe({
+              next: () => {
+                this.list();
+                this.resetForm();
+                this.messageService.add({
+                  severity: 'success',
+                  summary: 'Adicionado',
+                  detail: 'Cliente adicionado com sucesso!',
+                  life: 3000
+                });
+              },
+              error: () => {
+                this.messageService.add({
+                  severity: 'error',
+                  summary: 'Erro',
+                  detail: 'Erro ao adicionar o cliente.',
+                  life: 3000
+                });
+              }
+            });
+          }
+        }
+      },
+      error: () => {
         this.messageService.add({
-          severity: 'success',
-          summary: 'Atualizado',
-          detail: 'Cliente atualizado com sucesso!',
+          severity: 'error',
+          summary: 'Erro',
+          detail: 'Erro ao verificar email.',
           life: 3000
         });
-      });
-    } else {
-      // Adiciona um novo cliente
-      this.clienteService.addCliente(cliente).subscribe(() => {
-        this.list();
-        this.resetForm();
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Adicionado',
-          detail: 'Cliente adicionado com sucesso!',
-          life: 3000
-        });
-      });
-    }
+      }
+    });
   }
+
 
   resetForm() {
     this.clienteId = null;

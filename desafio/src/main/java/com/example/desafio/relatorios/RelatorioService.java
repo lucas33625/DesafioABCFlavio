@@ -70,16 +70,30 @@ public class RelatorioService {
 //        exporter.exportReport();
 //    }
 
-    public byte[] gerarRelatorioClientes(List<Cliente> clientes) throws JRException {
+    public byte[] gerarRelatorioClientes(List<Cliente> clientes) throws JRException, IOException {
         InputStream inputStream = getClass().getResourceAsStream("/templates/relatorio_clientes.jrxml");
         JasperReport jasperReport = JasperCompileManager.compileReport(inputStream);
 
-
         JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(clientes);
+
         Map<String, Object> parameters = new HashMap<>();
+        parameters.put("nomeRelatorio", "Relatório de Clientes");
+
+        // Carrega as imagens
+        InputStream logo = getClass().getResourceAsStream("/templates/img/logo.jpeg");
+        InputStream capa = getClass().getResourceAsStream("/templates/img/abc_technology_des_sol_empresariais_ltda_cover.jpeg");
+
+        if (logo == null || capa == null) {
+            throw new IOException("Logo ou capa não encontrados nos recursos.");
+        }
+
+        parameters.put("logo", logo);
+        parameters.put("capa", capa);
+
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
         return JasperExportManager.exportReportToPdf(jasperPrint);
     }
+
 
     public byte[] gerarRelatorioDetalheCliente(Cliente cliente) throws JRException, IOException {
         InputStream inputStream = getClass().getResourceAsStream("/templates/cliente_detalhe.jrxml");

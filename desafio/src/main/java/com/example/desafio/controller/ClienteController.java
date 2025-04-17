@@ -26,9 +26,11 @@ public class ClienteController {
 
 
     @GetMapping
-    public List<Cliente> listarClientes() {
-        return clienteDAO.listarClientes();
+    public ResponseEntity<List<Cliente>> listarClientes() {
+        List<Cliente> clientes = clienteDAO.listarClientes();
+        return ResponseEntity.ok(clientes); // Se a lista estiver vazia, retornará []
     }
+
 
 
     @GetMapping("/{id}")
@@ -41,6 +43,12 @@ public class ClienteController {
         }
     }
 
+    @GetMapping("/clientes/email-existe")
+    public ResponseEntity<Boolean> verificarEmail(@RequestParam String email) {
+        boolean emailExistente = clienteDAO.emailExist(email);
+        return ResponseEntity.ok(emailExistente);
+    }
+
 
     @PostMapping
     public ResponseEntity<Object> inserirCliente(@RequestBody Cliente cliente) {
@@ -48,8 +56,11 @@ public class ClienteController {
             return new ResponseEntity<>("Os campos nome, email e telefone não podem ser nulos.", HttpStatus.BAD_REQUEST);
         }
 
+        if (clienteDAO.emailExist(cliente.getEmail())) {
+            return new ResponseEntity<>("Este e-mail já está cadastrado", HttpStatus.CONFLICT);
+        }
         if (clienteDAO.inserirCliente(cliente)) {
-            // Enviar o e-mail somente após salvar com sucesso
+
             emailService.enviarEmailCadastro(cliente);
             return new ResponseEntity<>(cliente, HttpStatus.CREATED);
         } else {
@@ -62,14 +73,35 @@ public class ClienteController {
     @PutMapping("/{id}")
     public ResponseEntity<Object> atualizarCliente(@PathVariable Long id, @RequestBody Cliente cliente) {
         Cliente clienteExistente = clienteDAO.buscarClientePorId(id);
-        if (clienteExistente != null) {
-            cliente.setId(id);  // Certifique-se de que o ID correto está sendo atualizado
-            clienteDAO.atualizarCliente(cliente);
-            return new ResponseEntity<>(cliente, HttpStatus.OK);
+
+        if (clienteExistente == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente não encontrado");
+        }
+
+        // Validação simples manual dos campos obrigatórios
+        if (cliente.getName() == null || cliente.getEmail() == null || cliente.getPhoneNumber() == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Os campos nome, email e telefone não podem ser nulos");
+        }
+
+        if (clienteDAO.emailExist(cliente.getEmail())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Este email já esta cadastrado");
+        }
+
+        cliente.setId(id); // Garante que o ID correto seja mantido
+
+        boolean atualizado = clienteDAO.atualizarCliente(cliente);
+        if (atualizado) {
+            emailService.enviarEmailAlteracao(cliente);
+            return ResponseEntity.ok(cliente);
         } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erro ao atualizar o cliente");
         }
     }
+
+
+
 
 
     @DeleteMapping("/{id}")
