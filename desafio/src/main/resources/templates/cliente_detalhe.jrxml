@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.17.0.final using JasperReports Library version 6.17.0-6d93193241dd8cc42629e188b94f9e0bc5722efd  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="cliente_detalhe" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a1234567-b89c-40d1-90ab-abcdef123456">
+	<style name="Style1"/>
+	<parameter name="SUBREPORT" class="net.sf.jasperreports.engine.JasperReport"/>
 	<parameter name="REPORT_DIR" class="java.lang.String"/>
+	<parameter name="AUDITORIAS_DATA_SOURCE" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
 	<field name="name" class="java.lang.String"/>
 	<field name="email" class="java.lang.String"/>
 	<field name="phoneNumber" class="java.lang.String"/>
@@ -29,19 +32,31 @@
 		</band>
 	</pageHeader>
 	<detail>
-		<band height="120">
+		<band height="560">
 			<textField>
-				<reportElement mode="Opaque" x="0" y="60" width="555" height="20" backcolor="rgba(255, 9, 5, 0.18431373)" uuid="d3531d15-fa1a-4fe3-84d9-b718ab532844"/>
-				<textFieldExpression><![CDATA["Nome: " + $F{name}]]></textFieldExpression>
+				<reportElement x="0" y="0" width="555" height="20" uuid="d3531d15-fa1a-4fe3-84d9-b718ab532844"/>
+				<textFieldExpression><![CDATA["Nome: " + $F{name}.toUpperCase()]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="0" y="80" width="555" height="20" uuid="84a83a62-e933-4fc4-b83e-3494b08e70f1"/>
-				<textFieldExpression><![CDATA["Email: " + $F{email}]]></textFieldExpression>
+				<reportElement x="0" y="20" width="555" height="20" uuid="84a83a62-e933-4fc4-b83e-3494b08e70f1"/>
+				<textFieldExpression><![CDATA["Email: " + $F{email}.toUpperCase()]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement mode="Opaque" x="0" y="100" width="555" height="20" backcolor="rgba(255, 9, 5, 0.40392157)" uuid="9261909e-55f9-4240-9525-c63a1df7394c"/>
+				<reportElement x="0" y="40" width="555" height="20" uuid="9261909e-55f9-4240-9525-c63a1df7394c"/>
 				<textFieldExpression><![CDATA["Telefone: " + $F{phoneNumber}]]></textFieldExpression>
 			</textField>
+			<staticText>
+				<reportElement x="0" y="70" width="555" height="30" uuid="00606b49-c27d-4b1b-86b4-134d636ffb02"/>
+				<textElement>
+					<font fontName="Times New Roman" size="25"/>
+				</textElement>
+				<text><![CDATA[Auditoria do Cliente]]></text>
+			</staticText>
+			<subreport>
+				<reportElement x="0" y="100" width="555" height="460" uuid="abcd1234-5678-9012-abcd-ef1234567890"/>
+				<dataSourceExpression><![CDATA[$P{AUDITORIAS_DATA_SOURCE}]]></dataSourceExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT}]]></subreportExpression>
+			</subreport>
 		</band>
 	</detail>
 	<pageFooter>

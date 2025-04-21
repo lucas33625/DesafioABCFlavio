@@ -3,7 +3,6 @@ import { ClienteService } from './clientes.service';
 import { MessageService } from 'primeng/api';
 import { saveAs } from 'file-saver';
 
-
 @Component({
   selector: 'app-clientes',
   templateUrl: './clientes.component.html',
@@ -63,19 +62,18 @@ export class ClientesComponent implements OnInit {
       phoneNumber: this.telefone
     };
 
-    // Verifica se o email já está em uso
-    this.clienteService.checkEmailExists(cliente.email).subscribe({
+    this.clienteService.checkEmailExists(cliente.email, cliente.id).subscribe({
       next: (emailExists) => {
         if (emailExists) {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Este email já está em uso. Por favor, use um email diferente.',
+            detail: 'Este email já está em uso por outro cliente.',
             life: 3000
           });
         } else {
           if (this.clienteId) {
-            // Atualiza o cliente existente
+            // Atualiza cliente
             this.clienteService.updateClient(cliente).subscribe({
               next: () => {
                 this.list();
@@ -97,7 +95,7 @@ export class ClientesComponent implements OnInit {
               }
             });
           } else {
-            // Adiciona um novo cliente
+            // Adiciona cliente
             this.clienteService.addCliente(cliente).subscribe({
               next: () => {
                 this.list();
@@ -183,6 +181,7 @@ export class ClientesComponent implements OnInit {
       }
     });
   }
+
   private downloadArquivo(blob: Blob, nomeArquivo: string) {
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');

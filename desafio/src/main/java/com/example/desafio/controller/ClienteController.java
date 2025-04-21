@@ -31,8 +31,6 @@ public class ClienteController {
         return ResponseEntity.ok(clientes); // Se a lista estiver vazia, retornará []
     }
 
-
-
     @GetMapping("/{id}")
     public ResponseEntity<Cliente> buscarCliente(@PathVariable Long id) {
         Cliente cliente = clienteDAO.buscarClientePorId(id);
@@ -43,12 +41,11 @@ public class ClienteController {
         }
     }
 
-    @GetMapping("/clientes/email-existe")
-    public ResponseEntity<Boolean> verificarEmail(@RequestParam String email) {
-        boolean emailExistente = clienteDAO.emailExist(email);
+    @GetMapping("/email-existe")
+    public ResponseEntity<Boolean> verificarEmail(@RequestParam String email, @RequestParam(required = false) Long id) {
+        boolean emailExistente = clienteDAO.emailExist(email, id);
         return ResponseEntity.ok(emailExistente);
     }
-
 
     @PostMapping
     public ResponseEntity<Object> inserirCliente(@RequestBody Cliente cliente) {
@@ -56,7 +53,7 @@ public class ClienteController {
             return new ResponseEntity<>("Os campos nome, email e telefone não podem ser nulos.", HttpStatus.BAD_REQUEST);
         }
 
-        if (clienteDAO.emailExist(cliente.getEmail())) {
+        if (clienteDAO.emailExist(cliente.getEmail(), cliente.getId())) {
             return new ResponseEntity<>("Este e-mail já está cadastrado", HttpStatus.CONFLICT);
         }
         if (clienteDAO.inserirCliente(cliente)) {
@@ -67,8 +64,6 @@ public class ClienteController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-
 
     @PutMapping("/{id}")
     public ResponseEntity<Object> atualizarCliente(@PathVariable Long id, @RequestBody Cliente cliente) {
@@ -84,7 +79,7 @@ public class ClienteController {
                     .body("Os campos nome, email e telefone não podem ser nulos");
         }
 
-        if (clienteDAO.emailExist(cliente.getEmail())) {
+        if (clienteDAO.emailExist(cliente.getEmail() , cliente.getId())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Este email já esta cadastrado");
         }
 
@@ -100,10 +95,6 @@ public class ClienteController {
         }
     }
 
-
-
-
-
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deletarCliente(@PathVariable Long id) {
         Cliente clienteExistente = clienteDAO.buscarClientePorId(id);
@@ -114,32 +105,6 @@ public class ClienteController {
             return new ResponseEntity<>("Id não encontrado!",HttpStatus.NOT_FOUND);
         }
     }
-
-//    @GetMapping("/relatorio/pdf")
-//    public ResponseEntity<String> gerarRelatorio() {
-//        try {
-//            List<Cliente> clientes = clienteDAO.listarClientes();
-//            relatorioService.gerarRelatorioClientes(clientes);
-//            return ResponseEntity.ok("Relatório gerado com sucesso!");
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro: " + e.getMessage());
-//        }
-//    }
-//
-//    @GetMapping("/{id}/relatorio/docx")
-//    public ResponseEntity<String> gerarDocx(@PathVariable Long id) {
-//        Cliente cliente = clienteDAO.buscarClientePorId(id);
-//        if (cliente != null) {
-//            try {
-//                relatorioService.gerarRelatorioDetalheCliente(cliente);
-//                return ResponseEntity.ok("DOCX gerado com sucesso.");
-//            } catch (Exception e) {
-//                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao gerar DOCX: " + e.getMessage());
-//            }
-//        } else {
-//            return new ResponseEntity<>("Cliente não encontrado.", HttpStatus.NOT_FOUND);
-//        }
-//    }
 
     @GetMapping("/relatorio/pdf")
     public ResponseEntity<byte[]> gerarRelatorio() {
@@ -161,23 +126,26 @@ public class ClienteController {
 
     @GetMapping("/{id}/relatorio/docx")
     public ResponseEntity<byte[]> gerarDocx(@PathVariable Long id) {
-        Cliente cliente = clienteDAO.buscarClientePorId(id);
-        if (cliente != null) {
-            try {
-                byte[] docxBytes = relatorioService.gerarRelatorioDetalheCliente(cliente); // retorna byte[]
+        try {
+            Cliente cliente = clienteDAO.buscarClientePorId(id);
 
-                HttpHeaders headers = new HttpHeaders();
-                headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-                headers.add("Content-Disposition", "attachment; filename=cliente_" + id + ".docx");
-
-                return new ResponseEntity<>(docxBytes, headers, HttpStatus.OK);
-            } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            if (cliente == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+            byte[] docxBytes = relatorioService.gerarRelatorioDetalheCliente(cliente); // retorna byte[]
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+            headers.setContentDispositionFormData("attachment", "cliente_" + id + ".docx");
+            headers.setContentLength(docxBytes.length);
+
+            return new ResponseEntity<>(docxBytes, headers, HttpStatus.OK);
+
+        } catch (Exception e) {
+            // Logar o erro no console ajuda a entender o erro 500
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-
-
 }
