@@ -39,4 +39,12 @@ export class ClienteService {
       responseType: 'blob'
     });
   }
+
+  checkEmailExists(email: string, id?: number): Observable<boolean> {
+    let params = `email=${email}`;
+    if (id !== null && id !== undefined) {
+      params += `&id=${id}`;
+    }
+    return this.http.get<boolean>(`${this.apiUrl}/email-existe?${params}`);
+  }
 }

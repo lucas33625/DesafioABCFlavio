@@ -1,16 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.17.0.final using JasperReports Library version 6.17.0-6d93193241dd8cc42629e188b94f9e0bc5722efd  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="relatorio_clientes" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a1234567-b89c-40d1-90ab-abcdef123456">
-	<parameter name="nomeRelatorio" class="java.lang.String"/>
+	<style name="ZebraStyle" mode="Opaque">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT} % 2 == 0]]></conditionExpression>
+			<style backcolor="#F08080"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT} % 2 != 0]]></conditionExpression>
+			<style backcolor="#FFFFFF"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="REPORT_DIR" class="java.lang.String"/>
 	<field name="name" class="java.lang.String"/>
 	<field name="email" class="java.lang.String"/>
 	<field name="phoneNumber" class="java.lang.String"/>
 	<title>
-		<band height="50">
+		<band height="78">
 			<textField>
-				<reportElement x="0" y="10" width="555" height="30" uuid="58867838-ad62-48b6-ad4d-40d87a1ffc89"/>
-				<textFieldExpression><![CDATA[$P{nomeRelatorio}]]></textFieldExpression>
+				<reportElement x="-2" y="30" width="555" height="30" uuid="58867838-ad62-48b6-ad4d-40d87a1ffc89"/>
+				<textElement>
+					<font fontName="Times New Roman" size="19"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Relatório de Clientes"]]></textFieldExpression>
 			</textField>
+			<image>
+				<reportElement x="464" y="0" width="76" height="78" uuid="1f8566a0-ef76-4102-82cb-b3da799a2a37"/>
+				<imageExpression><![CDATA[$P{REPORT_DIR} + "img/logo.jpeg"]]></imageExpression>
+			</image>
 		</band>
 	</title>
 	<columnHeader>
@@ -32,17 +49,30 @@
 	<detail>
 		<band height="20">
 			<textField>
-				<reportElement x="0" y="0" width="185" height="20" uuid="74b9907e-1aa3-435c-b3b0-ada01070523b"/>
-				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+				<reportElement style="ZebraStyle" mode="Opaque" x="0" y="0" width="185" height="20" uuid="f8749db8-2bf5-46db-8018-88a13e147bd9"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{name}.toUpperCase()]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="185" y="0" width="185" height="20" uuid="72a193e9-29fb-4a75-9648-ed08c9c7178e"/>
-				<textFieldExpression><![CDATA[$F{email}]]></textFieldExpression>
+				<reportElement style="ZebraStyle" mode="Opaque" x="185" y="0" width="185" height="20" uuid="72a193e9-29fb-4a75-9648-ed08c9c7178e"/>
+				<textFieldExpression><![CDATA[$F{email}.toUpperCase()]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="370" y="0" width="185" height="20" uuid="3b045367-8af0-4096-8422-9f7a4eedfb8c"/>
+				<reportElement style="ZebraStyle" mode="Opaque" x="370" y="0" width="185" height="20" uuid="3b045367-8af0-4096-8422-9f7a4eedfb8c"/>
 				<textFieldExpression><![CDATA[$F{phoneNumber}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
+	<pageFooter>
+		<band height="93">
+			<image>
+				<reportElement x="10" y="0" width="80" height="78" uuid="1f8566a0-ef76-4102-82cb-b3da799a2a37"/>
+				<imageExpression><![CDATA[$P{REPORT_DIR} + "img/logo.jpeg"]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="470" y="0" width="85" height="80" uuid="f924c8c7-3cfb-4f80-8b56-7bf2a7921dec"/>
+				<imageExpression><![CDATA[$P{REPORT_DIR} + "img/images.png"]]></imageExpression>
+			</image>
+		</band>
+	</pageFooter>
 </jasperReport>

@@ -3,14 +3,24 @@ package com.example.desafio.dao;
 
 import com.example.desafio.model.Cliente;
 import com.example.desafio.util.ConexaoBD;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
 @Repository
 public class ClienteDAO {
 
+
+    private final JdbcTemplate jdbcTemplate;
+
+    public ClienteDAO(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public boolean inserirCliente(Cliente cliente) {
         String sql = "INSERT INTO clientes (name, email, phoneNumber) VALUES (?, ?, ?)";
@@ -81,23 +91,93 @@ public class ClienteDAO {
         return clientes;
     }
 
+    public boolean emailExist(String email, Long id) {
+        String sql;
+        Integer count;
 
-    public void atualizarCliente(Cliente cliente) {
-        String sql = "UPDATE clientes SET name = ?, email = ?, phoneNumber = ? WHERE id = ?";
+        if (id != null) {
+            sql = "SELECT COUNT(*) FROM clientes WHERE email = ? AND id != ?";
+            count = jdbcTemplate.queryForObject(sql, Integer.class, email, id);
+        } else {
+            sql = "SELECT COUNT(*) FROM clientes WHERE email = ?";
+            count = jdbcTemplate.queryForObject(sql, Integer.class, email);
+        }
 
-        try (Connection conn = ConexaoBD.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        return count != null && count > 0;
+    }
 
-            stmt.setString(1, cliente.getName());
-            stmt.setString(2, cliente.getEmail());
-            stmt.setString(3, cliente.getPhoneNumber());
-            stmt.setLong(4, cliente.getId());
 
-            stmt.executeUpdate();
+
+    public boolean atualizarCliente(Cliente cliente) {
+        String sqlUpdate = "UPDATE clientes SET name = ?, email = ?, phoneNumber = ? WHERE id = ?";
+        String sqlSelect = "SELECT name, email, phoneNumber FROM clientes WHERE id = ?";
+        String sqlAuditoria = "INSERT INTO cliente_auditoria (cliente_id, campo_alterado, valor_antigo, valor_novo, data_alteracao) VALUES (?, ?, ?, ?, ?)";
+
+        try (Connection conn = ConexaoBD.getConnection()) {
+
+            // Primeiro: buscar o cliente atual do banco
+            PreparedStatement selectStmt = conn.prepareStatement(sqlSelect);
+            selectStmt.setLong(1, cliente.getId());
+
+            ResultSet rs = selectStmt.executeQuery();
+
+            if (!rs.next()) {
+                return false; // cliente não encontrado
+            }
+
+            String nomeAntigo = rs.getString("name");
+            String emailAntigo = rs.getString("email");
+            String telefoneAntigo = rs.getString("phoneNumber");
+
+            // Segundo: comparar e salvar auditoria
+            PreparedStatement auditStmt = conn.prepareStatement(sqlAuditoria);
+            Timestamp agora = Timestamp.valueOf(LocalDateTime.now());
+
+            if (!Objects.equals(nomeAntigo, cliente.getName())) {
+                auditStmt.setLong(1, cliente.getId());
+                auditStmt.setString(2, "name");
+                auditStmt.setString(3, nomeAntigo);
+                auditStmt.setString(4, cliente.getName());
+                auditStmt.setTimestamp(5, agora);
+                auditStmt.executeUpdate();
+            }
+
+            if (!Objects.equals(emailAntigo, cliente.getEmail())) {
+                auditStmt.setLong(1, cliente.getId());
+                auditStmt.setString(2, "email");
+                auditStmt.setString(3, emailAntigo);
+                auditStmt.setString(4, cliente.getEmail());
+                auditStmt.setTimestamp(5, agora);
+                auditStmt.executeUpdate();
+            }
+
+            if (!Objects.equals(telefoneAntigo, cliente.getPhoneNumber())) {
+                auditStmt.setLong(1, cliente.getId());
+                auditStmt.setString(2, "phoneNumber");
+                auditStmt.setString(3, telefoneAntigo);
+                auditStmt.setString(4, cliente.getPhoneNumber());
+                auditStmt.setTimestamp(5, agora);
+                auditStmt.executeUpdate();
+            }
+
+            // Terceiro: atualizar o cliente
+            PreparedStatement updateStmt = conn.prepareStatement(sqlUpdate);
+            updateStmt.setString(1, cliente.getName());
+            updateStmt.setString(2, cliente.getEmail());
+            updateStmt.setString(3, cliente.getPhoneNumber());
+            updateStmt.setLong(4, cliente.getId());
+
+            updateStmt.executeUpdate();
+
+            return true;
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        return false;
     }
+
 
 
     public void deletarCliente(Long id) {
