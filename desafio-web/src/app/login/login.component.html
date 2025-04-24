@@ -1,0 +1,44 @@
+<p-toast></p-toast>
+<router-outlet></router-outlet>
+<div class="form-container">
+  <img src="assets/logo.jpeg" alt="Logo" class="logo" />
+
+  <h3>Faça Login Para Continuar!</h3>
+
+  <form (ngSubmit)="login()" #loginForm="ngForm">
+    <span class="ui-float-label">
+      <input
+        id="usuario"
+        name="usuario"
+        type="text"
+        size="30"
+        pInputText
+        [(ngModel)]="usuario"
+        required
+      />
+      <label for="usuario">Usuário</label>
+    </span>
+
+    <span class="ui-float-label">
+      <input
+        id="senha"
+        name="senha"
+        type="password"
+        size="30"
+        pInputText
+        [(ngModel)]="senha"
+        required
+      />
+      <label for="senha">Senha</label>
+    </span>
+
+    <button
+      pButton
+      type="submit"
+      label="Entrar"
+      [disabled]="!loginForm.valid"
+    ></button>
+  </form>
+</div>
+
+

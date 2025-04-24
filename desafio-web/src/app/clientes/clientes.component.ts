@@ -2,12 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { ClienteService } from './clientes.service';
 import { MessageService } from 'primeng/api';
 import { saveAs } from 'file-saver';
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-clientes',
   templateUrl: './clientes.component.html',
   styleUrls: ['./clientes.component.scss'],
-  providers: [MessageService]
 })
 export class ClientesComponent implements OnInit {
   clientes: any[] = [];
@@ -19,6 +19,7 @@ export class ClientesComponent implements OnInit {
   nomePesquisa: string = '';
 
   constructor(
+    private router: Router,
     private clienteService: ClienteService,
     private messageService: MessageService
   ) {}
@@ -208,7 +209,16 @@ export class ClientesComponent implements OnInit {
     this.clientesFiltrados = [];
   }
 
+  logout() {
+    localStorage.removeItem('usuario');
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Logout realizado',
+      detail: 'Você foi desconectado com sucesso!',
+      life: 3000
+    });
 
 
-
+    this.router.navigate(['/login']);
+  }
 }

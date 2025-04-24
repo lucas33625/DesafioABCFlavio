@@ -12,7 +12,10 @@ import { ClientesComponent } from './clientes/clientes.component';
 import { ClienteService } from './clientes/clientes.service';
 import {ClienteModule} from "./clientes/cliente.module";
 import {ToastModule} from "primeng/toast";
-
+import { LoginComponent } from './login/login.component';
+import {PaginatorModule} from "primeng/paginator";
+import {MessageService} from "primeng/api";
+import { LoginModule } from "./login/login.module";
 
 
 @NgModule({
@@ -24,8 +27,13 @@ import {ToastModule} from "primeng/toast";
     AppRoutingModule,
     HttpClientModule,
     ClienteModule,
+    PaginatorModule,
+    ButtonModule,
+    InputTextModule,
+    ToastModule,
+    LoginModule,
   ],
-  providers: [ClienteService],
+  providers: [ClienteService, MessageService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
