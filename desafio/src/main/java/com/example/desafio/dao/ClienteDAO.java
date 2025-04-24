@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -44,6 +45,33 @@ public class ClienteDAO {
         }
         return false;
     }
+
+    public List<Cliente> buscarPeloNome(String nome) {
+        List<Cliente> clientes = new ArrayList<>();
+        String sql = "SELECT * FROM clientes WHERE name LIKE ?";
+
+        try (Connection conn = ConexaoBD.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, "%" + nome + "%");
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    clientes.add(new Cliente(
+                            rs.getLong("id"),
+                            rs.getString("name"),
+                            rs.getString("email"),
+                            rs.getString("phoneNumber")
+                    ));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return clientes;
+    }
+
 
 
     public Cliente buscarClientePorId(Long id) {

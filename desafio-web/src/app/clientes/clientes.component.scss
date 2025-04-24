@@ -1,164 +1,147 @@
-/* Estilização do container principal */
-h3 {
-  font-size: 25px;
-}
-
 .container {
   display: flex;
-  justify-content: space-between; /* Espaço entre formulário e tabela */
-  align-items: flex-start; /* Alinha ao topo */
-  gap: 20px; /* Reduz o espaço entre eles */
+  justify-content: center;
+  align-items: flex-start;
+  gap: 40px;
   padding: 40px;
-  width: 100%;
-  max-width: 1100px; /* Ajustado para melhorar o espaço da tabela */
+  max-width: 1800px;
   margin: 0 auto;
-}
+  flex-wrap: wrap;
 
-/* Estilização do formulário */
-.form-container {
-  background: #f9f9f9;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  width: 280px; /* Reduzido para dar mais espaço à tabela */
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-/* Estilização da lista de clientes */
-.cliente-list {
-  flex-grow: 1; /* Faz a lista expandir automaticamente */
-  width: 100%;
-  max-width: calc(100% - 320px); /* Ajustado para ocupar o espaço restante */
-  margin-top: 20px;
-}
-
-/* Estilização da tabela */
-.p-datatable {
-  width: 100%;
-  border-radius: 8px;
-  overflow: hidden;
-  border: 1px solid #ddd;
-}
-
-/* Estiliza os cabeçalhos */
-th {
-  background-color: #007ad9;
-  color: white;
-  text-align: left;
-  padding: 10px;
-  white-space: nowrap; /* Evita quebra de linha */
-}
-
-/* Estiliza as células */
-td {
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
-  white-space: nowrap; /* Mantém os textos em linha reta */
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* Define larguras fixas por coluna */
-th:nth-child(1), td:nth-child(1) { width: 25%; }
-th:nth-child(2), td:nth-child(2) { width: 35%; }
-th:nth-child(3), td:nth-child(3) { width: 20%; }
-th:nth-child(4), td:nth-child(4) { width: 20%; text-align: center; }
-
-
-
-
-/* Ajuste nos botões */
-.button-group {
-  display: flex;
-  gap: 5px;
-  justify-content: center;
-  flex-wrap: nowrap;
-}
-
-.small-btn {
-  width: 25px;
-  height: 25px;
-  font-size: 12px;
-  padding: 3px;
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.small-btn {
-    background-color: #007ad9;
-    color: white;
-    border: none;
-  width: 60px;
-}
-
-.edit-btn {
-  background-color: #007ad9;
-  color: white;
-  border: none;
-}
-
-.delete-btn {
-  background-color: #ff0600;
-  color: white;
-  border: none;
-}
-
-.small-btn:hover {
-  opacity: 0.8;
-}
-
-/* Responsividade */
-@media (max-width: 1024px) {
-  .container {
+  .form-container {
+    margin-top: 100px;
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    width: 280px;
+    display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 30px;
+    gap: 15px;
+
+    h3 {
+      font-size: 25px;
+      margin-bottom: 10px;
+    }
   }
 
   .cliente-list {
     flex-grow: 1;
     width: 100%;
-    max-width: 100%;
+    max-width: calc(100% - 320px);
     margin-top: 20px;
-    display: flex;
-    flex-direction: column;
-  }
 
-  .p-datatable {
-    width: 100%;
-  }
+    .search-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      max-width: 500px;
+      width: 100%;
 
-  .button-group {
-    flex-wrap: nowrap;
-  }
+      input {
+        flex: 1;
+        padding: 0.5rem;
+        font-size: 1rem;
+      }
+    }
 
-  .small-btn {
-    width: 30px;
-    height: 30px;
-    font-size: 14px;
-  }
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-    padding-right: 10px; /* Adiciona espaçamento lateral ao botão */
-  }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding-right: 10px;
 
-  .button-group {
-    display: flex;
-    gap: 0.3rem;
-  }
+      h2 {
+        margin: 0;
+      }
+    }
 
-  .small-btn {
-    padding: 0.3rem 0.5rem;
-  }
-  .subir-5 {
-    margin-top: 50px;
-    transform: translateY(-5px)
-  }
+    .p-table,
+    .p-datatable {
+      width: 100%;
+      border-radius: 8px;
+      overflow: auto;
+      border: 1px solid #ddd;
 
+      th {
+        background-color: #007ad9;
+        color: white;
+        text-align: left;
+        padding: 10px;
+        white-space: nowrap;
+      }
+
+      td {
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+        white-space: normal; /* Permite quebra de linha */
+        overflow: visible;    /* Mostra tudo */
+        text-overflow: unset;
+        width: auto;
+      }
+    }
+
+    .button-group {
+      display: flex;
+      gap: 5px;
+      justify-content: center;
+      flex-wrap: nowrap;
+
+      .small-btn {
+        width: 60px;
+        height: 25px;
+        font-size: 12px;
+        padding: 3px;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #007ad9;
+        color: white;
+        border: none;
+
+        &.edit-btn {
+          background-color: #007ad9;
+        }
+
+        &.delete-btn {
+          background-color: #ff0600;
+        }
+
+        &.docx-btn {
+          background-color: #007ad9;
+        }
+
+        &:hover {
+          opacity: 0.8;
+        }
+      }
+    }
+  }
 }
+//Responsivo
+@media (max-width: 1024px) {
+  .container {
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+
+    .cliente-list {
+      max-width: 100%;
+    }
+
+    .button-group .small-btn {
+      width: 30px;
+      height: 30px;
+      font-size: 14px;
+    }
+  }
+}
+
+.limpar-button {
+  background: #ff0600;
+  border: none;
+}
+

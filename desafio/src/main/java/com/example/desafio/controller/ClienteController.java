@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -24,6 +25,11 @@ public class ClienteController {
     @Autowired
     private EmailService emailService;
 
+    @GetMapping("/buscar")
+    public ResponseEntity <List<Cliente>> listarPorNome(@RequestParam String nome) {
+        List<Cliente> clientes = clienteDAO.buscarPeloNome(nome);
+        return ResponseEntity.ok(clientes);
+    }
 
     @GetMapping
     public ResponseEntity<List<Cliente>> listarClientes() {

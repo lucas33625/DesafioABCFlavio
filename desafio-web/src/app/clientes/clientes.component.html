@@ -21,6 +21,19 @@
   </div>
 
   <div class="cliente-list">
+    <div class="search-bar">
+      <input
+        type="text"
+        pInputText
+        [(ngModel)]="nomePesquisa"
+        placeholder="Digite o nome do cliente"
+        (keyup.enter)="pesquisar()"
+      />
+      <button pButton type="button" icon="pi pi-search" (click)="pesquisar()"></button>
+      <button pButton type="button" label="Limpar" icon="pi pi-times" class="limpar-button" (click)="limparPesquisa()"></button>
+
+    </div>
+
     <div class="header">
       <h2>Lista de Clientes</h2>
       <button
@@ -28,15 +41,20 @@
         type="button"
         icon="pi pi-download"
         label="Baixar PDF Geral"
-        class="p-button-success"
         class="p-button-success subir-5"
         (click)="gerarPDF()"
       ></button>
-
     </div>
 
-    <p-table [value]="clientes" [paginator]="true" [rows]="10" responsiveLayout="scroll">
-      <ng-template pTemplate="header">
+
+    <p-table
+      [value]="clientesFiltrados.length > 0 ? clientesFiltrados : clientes"
+      [paginator]="true"
+      [rows]="10"
+      responsiveLayout="scroll"
+    >
+
+    <ng-template pTemplate="header">
         <tr>
           <th>Nome</th>
           <th>Email</th>

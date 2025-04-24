@@ -11,10 +11,12 @@ import { saveAs } from 'file-saver';
 })
 export class ClientesComponent implements OnInit {
   clientes: any[] = [];
+  clientesFiltrados: any [] = [];
   nome: string = '';
   email: string = '';
   telefone: string = '';
   clienteId: number | null = null;
+  nomePesquisa: string = '';
 
   constructor(
     private clienteService: ClienteService,
@@ -190,4 +192,23 @@ export class ClientesComponent implements OnInit {
     a.click();
     window.URL.revokeObjectURL(url);
   }
+
+  pesquisar() {
+    if (this.nomePesquisa && this.nomePesquisa.trim() !== '') {
+      this.clientesFiltrados = this.clientes.filter(cliente =>
+        cliente.name.toLowerCase().includes(this.nomePesquisa.toLowerCase())
+      );
+    } else {
+      this.clientesFiltrados = [];
+    }
+  }
+
+  limparPesquisa() {
+    this.nomePesquisa = '';
+    this.clientesFiltrados = [];
+  }
+
+
+
+
 }

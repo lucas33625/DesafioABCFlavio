@@ -10,6 +10,12 @@ export class ClienteService {
 
   constructor(private http: HttpClient) {}
 
+  buscarClientePorNome(nome: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/clientes/buscar`, {
+      params: { nome }
+    });
+  }
+
   getClientes(): Observable<any> {
     return this.http.get<any>(this.apiUrl);
   }
