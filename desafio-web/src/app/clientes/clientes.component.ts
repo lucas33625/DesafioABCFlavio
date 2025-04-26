@@ -194,10 +194,16 @@ export class ClientesComponent implements OnInit {
     window.URL.revokeObjectURL(url);
   }
 
+  removerAcentos(str: string): string {
+    return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  }
+
   pesquisar() {
     if (this.nomePesquisa && this.nomePesquisa.trim() !== '') {
+      const nomePesquisaSemAcento = this.removerAcentos(this.nomePesquisa.toLowerCase());
+
       this.clientesFiltrados = this.clientes.filter(cliente =>
-        cliente.name.toLowerCase().includes(this.nomePesquisa.toLowerCase())
+        this.removerAcentos(cliente.name.toLowerCase()).includes(nomePesquisaSemAcento)
       );
     } else {
       this.clientesFiltrados = [];

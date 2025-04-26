@@ -7,9 +7,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
+import java.text.Normalizer;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -46,23 +46,33 @@ public class ClienteDAO {
         return false;
     }
 
+    public static String removerAcentos(String str) {
+        return Normalizer.normalize(str, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
+    }
+
     public List<Cliente> buscarPeloNome(String nome) {
         List<Cliente> clientes = new ArrayList<>();
+        String nomeSemAcento = removerAcentos(nome).toLowerCase(); // Remove acentos do nome
+
         String sql = "SELECT * FROM clientes WHERE name LIKE ?";
 
         try (Connection conn = ConexaoBD.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setString(1, "%" + nome + "%");
+            stmt.setString(1, "%" + nomeSemAcento + "%");
 
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    clientes.add(new Cliente(
-                            rs.getLong("id"),
-                            rs.getString("name"),
-                            rs.getString("email"),
-                            rs.getString("phoneNumber")
-                    ));
+                    String nomeCliente = rs.getString("name");
+                    // Remover acentos dos nomes dos clientes antes da comparação
+                    if (removerAcentos(nomeCliente).toLowerCase().contains(nomeSemAcento)) {
+                        clientes.add(new Cliente(
+                                rs.getLong("id"),
+                                nomeCliente,
+                                rs.getString("email"),
+                                rs.getString("phoneNumber")
+                        ));
+                    }
                 }
             }
         } catch (SQLException e) {
@@ -71,6 +81,7 @@ public class ClienteDAO {
 
         return clientes;
     }
+
 
 
 

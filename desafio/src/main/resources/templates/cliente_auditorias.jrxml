@@ -57,10 +57,10 @@
 				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{valorNovo}]]></textFieldExpression>
 			</textField>
-			<textField pattern="dd/MM/yyyy HH:mm">
+			<textField pattern="dd/MM/yyyy HH:mm:ss">
 				<reportElement style="ZebraStyle" mode="Opaque" x="390" y="0" width="145" height="20" uuid="cab65968-5f49-4eb5-ab18-2b9941f61fc6"/>
 				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{dataAlteracao}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[java.util.Date.from($F{dataAlteracao}.atZone(java.time.ZoneId.systemDefault()).toInstant())]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
