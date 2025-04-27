@@ -10,20 +10,22 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { ClientesComponent } from './clientes.component';
 import { ClienteService } from './clientes.service';
+import {ProgressSpinnerModule} from "primeng/primeng";
 
 @NgModule({
   declarations: [
     ClientesComponent
   ],
-  imports: [
-    CommonModule,
-    FormsModule,
-    ButtonModule,
-    InputTextModule,
-    TableModule,
-    ToastModule,
-    BrowserAnimationsModule
-  ],
+    imports: [
+        CommonModule,
+        FormsModule,
+        ButtonModule,
+        InputTextModule,
+        TableModule,
+        ToastModule,
+        BrowserAnimationsModule,
+        ProgressSpinnerModule
+    ],
   providers: [ClienteService, MessageService],
   exports: [ClientesComponent]
 })

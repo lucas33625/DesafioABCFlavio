@@ -17,7 +17,16 @@
       <label for="email">Email</label>
     </span>
 
-    <button pButton type="button" label="Adicionar" (click)="handleClick()" [disabled]="!isFormValid()"></button>
+    <!-- Botão -->
+    <button
+      pButton
+      type="button"
+      label="Adicionar"
+      (click)="handleClick()"
+      [disabled]="!isFormValid()">
+    </button>
+
+
   </div>
 
   <div class="cliente-list">

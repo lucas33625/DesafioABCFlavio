@@ -1,6 +1,7 @@
 package com.example.desafio.dao;
 
 
+import com.example.desafio.dto.ClienteDTO;
 import com.example.desafio.model.Cliente;
 import com.example.desafio.util.ConexaoBD;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -23,7 +24,7 @@ public class ClienteDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public boolean inserirCliente(Cliente cliente) {
+    public boolean inserirCliente(ClienteDTO cliente) {
         String sql = "INSERT INTO clientes (name, email, phoneNumber) VALUES (?, ?, ?)";
         try (Connection conn = ConexaoBD.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -50,8 +51,8 @@ public class ClienteDAO {
         return Normalizer.normalize(str, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
     }
 
-    public List<Cliente> buscarPeloNome(String nome) {
-        List<Cliente> clientes = new ArrayList<>();
+    public List<ClienteDTO> buscarPeloNome(String nome) {
+        List<ClienteDTO> clientes = new ArrayList<>();
         String nomeSemAcento = removerAcentos(nome).toLowerCase(); // Remove acentos do nome
 
         String sql = "SELECT * FROM clientes WHERE name LIKE ?";
@@ -66,7 +67,7 @@ public class ClienteDAO {
                     String nomeCliente = rs.getString("name");
                     // Remover acentos dos nomes dos clientes antes da comparação
                     if (removerAcentos(nomeCliente).toLowerCase().contains(nomeSemAcento)) {
-                        clientes.add(new Cliente(
+                        clientes.add(new ClienteDTO(
                                 rs.getLong("id"),
                                 nomeCliente,
                                 rs.getString("email"),
@@ -85,7 +86,7 @@ public class ClienteDAO {
 
 
 
-    public Cliente buscarClientePorId(Long id) {
+    public ClienteDTO buscarClientePorId(Long id) {
         String sql = "SELECT * FROM clientes WHERE id = ?";
         try (Connection conn = ConexaoBD.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -93,7 +94,7 @@ public class ClienteDAO {
             stmt.setLong(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    return new Cliente(
+                    return new ClienteDTO(
                             rs.getLong("id"),
                             rs.getString("name"),
                             rs.getString("email"),
@@ -108,8 +109,8 @@ public class ClienteDAO {
     }
 
 
-    public List<Cliente> listarClientes() {
-        List<Cliente> clientes = new ArrayList<>();
+    public List<ClienteDTO> listarClientes() {
+        List<ClienteDTO> clientes = new ArrayList<>();
         String sql = "SELECT * FROM clientes";
 
         try (Connection conn = ConexaoBD.getConnection();
@@ -117,7 +118,7 @@ public class ClienteDAO {
              ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
-                clientes.add(new Cliente(
+                clientes.add(new ClienteDTO(
                         rs.getLong("id"),
                         rs.getString("name"),
                         rs.getString("email"),
@@ -147,7 +148,7 @@ public class ClienteDAO {
 
 
 
-    public boolean atualizarCliente(Cliente cliente) {
+    public boolean atualizarCliente(ClienteDTO cliente) {
         String sqlUpdate = "UPDATE clientes SET name = ?, email = ?, phoneNumber = ? WHERE id = ?";
         String sqlSelect = "SELECT name, email, phoneNumber FROM clientes WHERE id = ?";
         String sqlAuditoria = "INSERT INTO cliente_auditoria (cliente_id, campo_alterado, valor_antigo, valor_novo, data_alteracao) VALUES (?, ?, ?, ?, ?)";

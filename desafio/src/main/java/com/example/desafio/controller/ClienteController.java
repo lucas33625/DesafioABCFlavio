@@ -1,7 +1,7 @@
 package com.example.desafio.controller;
 
 import com.example.desafio.dao.ClienteDAO;
-import com.example.desafio.model.Cliente;
+import com.example.desafio.dto.ClienteDTO;
 import com.example.desafio.relatorios.RelatorioService;
 import com.example.desafio.services.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -26,20 +26,20 @@ public class ClienteController {
     private EmailService emailService;
 
     @GetMapping("/buscar")
-    public ResponseEntity <List<Cliente>> listarPorNome(@RequestParam String nome) {
-        List<Cliente> clientes = clienteDAO.buscarPeloNome(nome);
+    public ResponseEntity <List<ClienteDTO>> listarPorNome(@RequestParam String nome) {
+        List<ClienteDTO> clientes = clienteDAO.buscarPeloNome(nome);
         return ResponseEntity.ok(clientes);
     }
 
     @GetMapping
-    public ResponseEntity<List<Cliente>> listarClientes() {
-        List<Cliente> clientes = clienteDAO.listarClientes();
+    public ResponseEntity<List<ClienteDTO>> listarClientes() {
+        List<ClienteDTO> clientes = clienteDAO.listarClientes();
         return ResponseEntity.ok(clientes); // Se a lista estiver vazia, retornará []
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Cliente> buscarCliente(@PathVariable Long id) {
-        Cliente cliente = clienteDAO.buscarClientePorId(id);
+    public ResponseEntity<ClienteDTO> buscarCliente(@PathVariable Long id) {
+        ClienteDTO cliente = clienteDAO.buscarClientePorId(id);
         if (cliente != null) {
             return new ResponseEntity<>(cliente, HttpStatus.OK);
         } else {
@@ -54,7 +54,7 @@ public class ClienteController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> inserirCliente(@RequestBody Cliente cliente) {
+    public ResponseEntity<Object> inserirCliente(@RequestBody @Valid ClienteDTO cliente) {
         if (cliente.getName() == null || cliente.getEmail() == null || cliente.getPhoneNumber() == null) {
             return new ResponseEntity<>("Os campos nome, email e telefone não podem ser nulos.", HttpStatus.BAD_REQUEST);
         }
@@ -72,8 +72,8 @@ public class ClienteController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> atualizarCliente(@PathVariable Long id, @RequestBody Cliente cliente) {
-        Cliente clienteExistente = clienteDAO.buscarClientePorId(id);
+    public ResponseEntity<Object> atualizarCliente(@PathVariable Long id, @RequestBody ClienteDTO cliente) {
+        ClienteDTO clienteExistente = clienteDAO.buscarClientePorId(id);
 
         if (clienteExistente == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente não encontrado");
@@ -103,7 +103,7 @@ public class ClienteController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deletarCliente(@PathVariable Long id) {
-        Cliente clienteExistente = clienteDAO.buscarClientePorId(id);
+        ClienteDTO clienteExistente = clienteDAO.buscarClientePorId(id);
         if (clienteExistente != null) {
             clienteDAO.deletarCliente(id);
             return new ResponseEntity<>(HttpStatus.OK);  // 204 No Content
@@ -115,7 +115,7 @@ public class ClienteController {
     @GetMapping("/relatorio/pdf")
     public ResponseEntity<byte[]> gerarRelatorio() {
         try {
-            List<Cliente> clientes = clienteDAO.listarClientes();
+            List<ClienteDTO> clientes = clienteDAO.listarClientes();
             byte[] pdfBytes = relatorioService.gerarRelatorioClientes(clientes);
 
             HttpHeaders headers = new HttpHeaders();
@@ -133,7 +133,7 @@ public class ClienteController {
     @GetMapping("/{id}/relatorio/docx")
     public ResponseEntity<byte[]> gerarDocx(@PathVariable Long id) {
         try {
-            Cliente cliente = clienteDAO.buscarClientePorId(id);
+            ClienteDTO cliente = clienteDAO.buscarClientePorId(id);
 
             if (cliente == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

@@ -1,6 +1,8 @@
 package com.example.desafio.relatorios;
 
 import com.example.desafio.dao.AuditoriaDAO;
+import com.example.desafio.dto.AuditoriaDTO;
+import com.example.desafio.dto.ClienteDTO;
 import com.example.desafio.model.Cliente;
 import com.example.desafio.model.ClienteAudit;
 import net.sf.jasperreports.engine.*;
@@ -23,7 +25,7 @@ import java.util.Map;
 @Service
 public class RelatorioService {
 
-    public byte[] gerarRelatorioClientes(List<Cliente> clientes) throws JRException, IOException {
+    public byte[] gerarRelatorioClientes(List<ClienteDTO> clientes) throws JRException, IOException {
         try {
             // Carregar o arquivo JRXML
             InputStream inputStream = getClass().getResourceAsStream("/templates/relatorio_clientes.jrxml");
@@ -81,7 +83,7 @@ public class RelatorioService {
         }
     }
 
-    public byte[] gerarRelatorioDetalheCliente(Cliente cliente) throws JRException, IOException {
+    public byte[] gerarRelatorioDetalheCliente(ClienteDTO cliente) throws JRException, IOException {
         try {
             // Carregar o arquivo JRXML do relatório principal
             InputStream inputStream = getClass().getResourceAsStream("/templates/cliente_detalhe.jrxml");
@@ -101,13 +103,13 @@ public class RelatorioService {
 
             // Buscar auditorias do cliente
             AuditoriaDAO auditoriaDAO = new AuditoriaDAO();
-            List<ClienteAudit> auditorias = auditoriaDAO.buscarAuditoriasPorCliente(cliente.getId());
+            List<AuditoriaDTO> auditorias = auditoriaDAO.buscarAuditoriasPorCliente(cliente.getId());
 
             // Validação (debug)
             if (auditorias == null || auditorias.isEmpty()) {
                 System.out.println("Nenhuma auditoria encontrada para o cliente.");
             }
-            for (ClienteAudit audit : auditorias) {
+            for (AuditoriaDTO audit : auditorias) {
                 if (audit.getId() == null || audit.getClienteId() == null) {
                     System.out.println("Erro: id ou clienteId nulos para auditoria " + audit);
                 }

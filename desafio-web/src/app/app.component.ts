@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { LoadingService } from './loading.service';
 
 @Component({
   selector: 'app-root',
@@ -8,5 +9,11 @@ import { Component } from '@angular/core';
 export class AppComponent {
   title = 'desafio-web';
   property: any;
+  isLoading = false;
 
+  constructor(private loadingService: LoadingService) {
+    this.loadingService.loading$.subscribe(loading => {
+      this.isLoading = loading;
+    });
+  }
 }

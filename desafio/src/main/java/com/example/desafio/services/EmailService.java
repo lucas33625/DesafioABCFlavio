@@ -1,5 +1,6 @@
 package com.example.desafio.services;
 
+import com.example.desafio.dto.ClienteDTO;
 import com.example.desafio.model.Cliente;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
@@ -14,7 +15,7 @@ public class EmailService {
     private JavaMailSender mailSender;
 
     @Async
-    public void enviarEmailCadastro(Cliente cliente) {
+    public void enviarEmailCadastro(ClienteDTO cliente) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(cliente.getEmail());
         message.setSubject("Cadastro realizado com sucesso, seja bem-vindo!");
@@ -23,7 +24,7 @@ public class EmailService {
         mailSender.send(message);
     }
 
-    public void enviarEmailAlteracao(Cliente cliente) {
+    public void enviarEmailAlteracao(ClienteDTO cliente) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(cliente.getEmail());
         message.setSubject("Cadastro alterado com sucesso!");

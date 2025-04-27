@@ -1,2 +1,7 @@
 <router-outlet></router-outlet>
 <p-toast></p-toast>
+
+
+<div *ngIf="isLoading" class="overlay">
+  <p-progressSpinner></p-progressSpinner>
+</div>

@@ -1,5 +1,6 @@
 package com.example.desafio.dao;
 
+import com.example.desafio.dto.AuditoriaDTO;
 import com.example.desafio.model.ClienteAudit;
 import com.example.desafio.util.ConexaoBD;
 
@@ -9,8 +10,8 @@ import java.util.List;
 
 public class AuditoriaDAO {
 
-    public List<ClienteAudit> buscarAuditoriasPorCliente(Long clienteId) {
-        List<ClienteAudit> auditorias = new ArrayList<>();
+    public List<AuditoriaDTO> buscarAuditoriasPorCliente(Long clienteId) {
+        List<AuditoriaDTO> auditorias = new ArrayList<>();
         String sql = "SELECT * FROM cliente_auditoria WHERE cliente_id = ? ORDER BY data_alteracao DESC";
 
         try (Connection conn = ConexaoBD.getConnection();
@@ -20,7 +21,7 @@ public class AuditoriaDAO {
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                ClienteAudit audit = new ClienteAudit();
+                AuditoriaDTO audit = new AuditoriaDTO();
 
                 audit.setCampoAlterado(rs.getString("campo_alterado"));
                 audit.setValorAntigo(rs.getString("valor_antigo"));

@@ -3,6 +3,7 @@ import { ClienteService } from './clientes.service';
 import { MessageService } from 'primeng/api';
 import { saveAs } from 'file-saver';
 import {Router} from "@angular/router";
+import {LoadingService} from "../loading.service";
 
 @Component({
   selector: 'app-clientes',
@@ -21,7 +22,8 @@ export class ClientesComponent implements OnInit {
   constructor(
     private router: Router,
     private clienteService: ClienteService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private loadingService: LoadingService
   ) {}
 
   ngOnInit() {
@@ -39,6 +41,7 @@ export class ClientesComponent implements OnInit {
     this.nome = cliente.name;
     this.email = cliente.email;
     this.telefone = cliente.phoneNumber;
+
   }
 
   deleteCliente(cliente: any) {
@@ -57,7 +60,17 @@ export class ClientesComponent implements OnInit {
     return this.nome.trim() !== '' && this.email.trim() !== '' && this.telefone.trim() !== '';
   }
 
+  // isLoading = false;
+
   handleClick() {
+
+    this.loadingService.show(); // Mostra o spinner
+
+    // Simula algo assíncrono (tipo um HTTP request)
+    setTimeout(() => {
+      this.loadingService.hide(); // Esconde o spinner
+    }, 2000);
+
     const cliente = {
       id: this.clienteId,
       name: this.nome,
@@ -142,6 +155,8 @@ export class ClientesComponent implements OnInit {
   }
 
   gerarPDF() {
+    this.loadingService.show(); // ativa o loading
+
     this.clienteService.gerarPDF().subscribe({
       next: (blob) => {
         saveAs(blob, 'relatorio_clientes.pdf');
@@ -151,6 +166,7 @@ export class ClientesComponent implements OnInit {
           detail: 'Relatório geral baixado com sucesso!',
           life: 3000
         });
+        this.loadingService.hide(); // desativa o loading no sucesso
       },
       error: () => {
         this.messageService.add({
@@ -159,11 +175,14 @@ export class ClientesComponent implements OnInit {
           detail: 'Falha ao gerar relatório PDF',
           life: 3000
         });
+        this.loadingService.hide(); // desativa o loading também no erro
       }
     });
   }
 
+
   gerarDOCX(clienteId: number) {
+    this.loadingService.show();
     this.clienteService.gerarDOCX(clienteId).subscribe({
       next: (blob) => {
         this.downloadArquivo(blob, `cliente_${clienteId}.docx`);
@@ -173,6 +192,7 @@ export class ClientesComponent implements OnInit {
           detail: `Relatório do cliente ${clienteId} baixado com sucesso!`,
           life: 3000
         });
+        this.loadingService.hide();
       },
       error: () => {
         this.messageService.add({
@@ -181,6 +201,7 @@ export class ClientesComponent implements OnInit {
           detail: `Erro ao gerar relatório do cliente ${clienteId}`,
           life: 3000
         });
+        this.loadingService.hide();
       }
     });
   }
@@ -227,4 +248,5 @@ export class ClientesComponent implements OnInit {
 
     this.router.navigate(['/login']);
   }
+
 }
