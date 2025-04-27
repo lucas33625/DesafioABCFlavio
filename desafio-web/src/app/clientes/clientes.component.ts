@@ -220,16 +220,28 @@ export class ClientesComponent implements OnInit {
   }
 
   pesquisar() {
+
     if (this.nomePesquisa && this.nomePesquisa.trim() !== '') {
       const nomePesquisaSemAcento = this.removerAcentos(this.nomePesquisa.toLowerCase());
 
       this.clientesFiltrados = this.clientes.filter(cliente =>
         this.removerAcentos(cliente.name.toLowerCase()).includes(nomePesquisaSemAcento)
       );
+
+      if (this.clientesFiltrados.length === 0) {
+       this.messageService.add({
+          severity: 'info',
+          summary: 'Nenhum resultado encontrado',
+          detail: 'Nenhum cliente encontrado com esse nome.',
+          life: 3000
+        });
+      }
     } else {
       this.clientesFiltrados = [];
     }
   }
+
+
 
   limparPesquisa() {
     this.nomePesquisa = '';
