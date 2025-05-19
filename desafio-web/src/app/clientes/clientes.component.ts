@@ -13,10 +13,6 @@ import {LoadingService} from "../loading.service";
 export class ClientesComponent implements OnInit {
   clientes: any[] = [];
   clientesFiltrados: any [] = [];
-  nome: string = '';
-  email: string = '';
-  telefone: string = '';
-  clienteId: number | null = null;
   nomePesquisa: string = '';
 
   constructor(
@@ -36,12 +32,19 @@ export class ClientesComponent implements OnInit {
     });
   }
 
-  updateClient(cliente: any) {
-    this.clienteId = cliente.id;
-    this.nome = cliente.name;
-    this.email = cliente.email;
-    this.telefone = cliente.phoneNumber;
+  onClienteSalvo(_: any) {
+    this.list(); // Atualiza a lista de clientes
+    this.mostrarFormulario = false; // Fecha o formulário, se necessário
+  }
 
+  mostrarFormulario = false;
+
+  novoCliente() {
+    this.router.navigate(['/clientes/cadastro']);
+  }
+
+  updateClient(cliente: any) {
+    this.router.navigate(['/clientes/editar', cliente.id]);
   }
 
   deleteCliente(cliente: any) {
@@ -54,104 +57,6 @@ export class ClientesComponent implements OnInit {
         life: 3000
       });
     });
-  }
-
-  isFormValid(): boolean {
-    return this.nome.trim() !== '' && this.email.trim() !== '' && this.telefone.trim() !== '';
-  }
-
-  // isLoading = false;
-
-  handleClick() {
-
-    this.loadingService.show(); // Mostra o spinner
-
-    // Simula algo assíncrono (tipo um HTTP request)
-    setTimeout(() => {
-      this.loadingService.hide(); // Esconde o spinner
-    }, 2000);
-
-    const cliente = {
-      id: this.clienteId,
-      name: this.nome,
-      email: this.email,
-      phoneNumber: this.telefone
-    };
-
-    this.clienteService.checkEmailExists(cliente.email, cliente.id).subscribe({
-      next: (emailExists) => {
-        if (emailExists) {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Erro',
-            detail: 'Este email já está em uso por outro cliente.',
-            life: 3000
-          });
-        } else {
-          if (this.clienteId) {
-            // Atualiza cliente
-            this.clienteService.updateClient(cliente).subscribe({
-              next: () => {
-                this.list();
-                this.resetForm();
-                this.messageService.add({
-                  severity: 'success',
-                  summary: 'Atualizado',
-                  detail: 'Cliente atualizado com sucesso!',
-                  life: 3000
-                });
-              },
-              error: () => {
-                this.messageService.add({
-                  severity: 'error',
-                  summary: 'Erro',
-                  detail: 'Erro ao atualizar o cliente.',
-                  life: 3000
-                });
-              }
-            });
-          } else {
-            // Adiciona cliente
-            this.clienteService.addCliente(cliente).subscribe({
-              next: () => {
-                this.list();
-                this.resetForm();
-                this.messageService.add({
-                  severity: 'success',
-                  summary: 'Adicionado',
-                  detail: 'Cliente adicionado com sucesso!',
-                  life: 3000
-                });
-              },
-              error: () => {
-                this.messageService.add({
-                  severity: 'error',
-                  summary: 'Erro',
-                  detail: 'Erro ao adicionar o cliente.',
-                  life: 3000
-                });
-              }
-            });
-          }
-        }
-      },
-      error: () => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Erro',
-          detail: 'Erro ao verificar email.',
-          life: 3000
-        });
-      }
-    });
-  }
-
-
-  resetForm() {
-    this.clienteId = null;
-    this.nome = '';
-    this.email = '';
-    this.telefone = '';
   }
 
   gerarPDF() {
@@ -241,8 +146,6 @@ export class ClientesComponent implements OnInit {
     }
   }
 
-
-
   limparPesquisa() {
     this.nomePesquisa = '';
     this.clientesFiltrados = [];
@@ -256,8 +159,6 @@ export class ClientesComponent implements OnInit {
       detail: 'Você foi desconectado com sucesso!',
       life: 3000
     });
-
-
     this.router.navigate(['/login']);
   }
 

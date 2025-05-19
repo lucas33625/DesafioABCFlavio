@@ -1,0 +1,17 @@
+<div class="container-fullscreen">
+  <div class="image-wrapper">
+    <img src="https://estruturadinamica.com.br/wp-content/uploads/2024/07/atendimento-ao-cliente-1.jpg" alt="Imagem de exemplo" />
+  </div>
+
+  <form class="form-container">
+    <h3>{{ tituloFormulario }}</h3>
+
+    <input id="nome" type="text" pInputText [(ngModel)]="cliente.name" name="nome" placeholder="Nome" />
+    <input id="telefone" type="text" pInputText [(ngModel)]="cliente.phoneNumber" name="telefone" placeholder="Telefone" />
+    <input id="email" type="email" pInputText [(ngModel)]="cliente.email" name="email" required placeholder="Email" />
+    <input id="age" type="age" pInputText [(ngModel)]="cliente.age" name="age" required placeholder="Idade" />
+
+    <button pButton type="button"  (click)="handleClick()" [disabled]="!isFormValid()" style="background-color: #28a745; border: none; color: white">{{ tituloBotao }}</button>
+    <button pButton type="button" class="p-button-secondary" (click)="onCancelar()">Cancelar</button>
+  </form>
+</div>

@@ -5,3 +5,8 @@
 <div *ngIf="isLoading" class="overlay">
   <p-progressSpinner></p-progressSpinner>
 </div>
+
+<div class="menu-top">
+  <p-menu #menu [popup]="true" [model]="items"></p-menu>
+  <button type="button" pButton icon="pi pi-bars" label="Menu" (click)="menu.toggle($event)"></button>
+</div>

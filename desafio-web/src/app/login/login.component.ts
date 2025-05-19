@@ -33,7 +33,7 @@ export class LoginComponent {
           detail: 'Login bem-sucedido!',
           life: 3000
         });
-        this.router.navigate(['/cadastro-clientes']);
+        this.router.navigate(['/clientes']);
       },
       error: () => {
         this.messageService.add({

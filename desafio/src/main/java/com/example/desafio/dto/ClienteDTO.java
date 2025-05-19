@@ -17,4 +17,6 @@ public class ClienteDTO {
         private String email;
         @NotNull (message = "Telefone é obrigatório")
         private String phoneNumber;
+        @NotNull (message = "Idade é obrigatório")
+        private Integer age;
 }

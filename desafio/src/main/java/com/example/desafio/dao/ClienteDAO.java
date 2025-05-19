@@ -25,13 +25,14 @@ public class ClienteDAO {
     }
 
     public boolean inserirCliente(ClienteDTO cliente) {
-        String sql = "INSERT INTO clientes (name, email, phoneNumber) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO clientes (name, email, phoneNumber, age) VALUES (?, ?, ?, ?)";
         try (Connection conn = ConexaoBD.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             stmt.setString(1, cliente.getName());
             stmt.setString(2, cliente.getEmail());
             stmt.setString(3, cliente.getPhoneNumber());
+            stmt.setInt(4, cliente.getAge());
             stmt.executeUpdate();
 
 
@@ -71,7 +72,8 @@ public class ClienteDAO {
                                 rs.getLong("id"),
                                 nomeCliente,
                                 rs.getString("email"),
-                                rs.getString("phoneNumber")
+                                rs.getString("phoneNumber"),
+                                rs.getInt("age")
                         ));
                     }
                 }
@@ -98,7 +100,8 @@ public class ClienteDAO {
                             rs.getLong("id"),
                             rs.getString("name"),
                             rs.getString("email"),
-                            rs.getString("phoneNumber")
+                            rs.getString("phoneNumber"),
+                            rs.getInt("age")
                     );
                 }
             }
@@ -122,7 +125,8 @@ public class ClienteDAO {
                         rs.getLong("id"),
                         rs.getString("name"),
                         rs.getString("email"),
-                        rs.getString("phoneNumber")
+                        rs.getString("phoneNumber"),
+                        rs.getInt("age")
                 ));
             }
         } catch (SQLException e) {

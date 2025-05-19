@@ -11,10 +11,12 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ClientesComponent } from './clientes.component';
 import { ClienteService } from './clientes.service';
 import {ProgressSpinnerModule} from "primeng/primeng";
+import { CadastroClienteComponent } from './cadastro-cliente/cadastro-cliente.component';
 
 @NgModule({
   declarations: [
-    ClientesComponent
+    ClientesComponent,
+    CadastroClienteComponent,
   ],
     imports: [
         CommonModule,

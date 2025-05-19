@@ -80,7 +80,7 @@ public class ClienteController {
         }
 
         // Validação simples manual dos campos obrigatórios
-        if (cliente.getName() == null || cliente.getEmail() == null || cliente.getPhoneNumber() == null) {
+        if (cliente.getName() == null || cliente.getEmail() == null || cliente.getPhoneNumber() == null || cliente.getAge() == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Os campos nome, email e telefone não podem ser nulos");
         }

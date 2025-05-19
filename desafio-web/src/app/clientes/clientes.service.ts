@@ -32,6 +32,10 @@ export class ClienteService {
     return this.http.put<any>(`${this.apiUrl}/${cliente.id}`, cliente);
   }
 
+  getClienteById(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/${id}`);
+  }
+
   // Gera relatório completo em PDF
   gerarPDF(): Observable<Blob> {
     return this.http.get(`${this.apiUrl}/relatorio/pdf`, {
