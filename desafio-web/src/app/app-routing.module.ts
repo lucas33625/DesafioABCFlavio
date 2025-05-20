@@ -7,18 +7,19 @@ import {DashboardComponent} from "./dashboard/dashboard.component";
 import {GraficoLineComponent} from "./dashboard/grafico-line/grafico-line.component";
 import {GraficoPieComponent} from "./dashboard/grafico-pie/grafico-pie.component";
 import {GraficoDoughnutComponent} from "./dashboard/grafico-doughnut/grafico-doughnut.component";
+import {AuthGuard} from "./AuthGuard.service";
 
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
-  { path: 'clientes', component: ClientesComponent } ,
-  { path: 'clientes/cadastro', component: CadastroClienteComponent },
-  { path: 'clientes/editar/:id', component: CadastroClienteComponent },
-  { path: 'dashboard-bar', component: DashboardComponent },
-  { path: 'dashboard-line', component: GraficoLineComponent },
-  { path: 'dashboard-pie', component: GraficoPieComponent },
-  { path: 'dashboard-doughnut', component: GraficoDoughnutComponent },
+  { path: 'clientes', component: ClientesComponent, canActivate: [AuthGuard]  } ,
+  { path: 'clientes/cadastro', component: CadastroClienteComponent, canActivate: [AuthGuard]  },
+  { path: 'clientes/editar/:id', component: CadastroClienteComponent, canActivate: [AuthGuard]  },
+  { path: 'dashboard-bar', component: DashboardComponent, canActivate: [AuthGuard]  },
+  { path: 'dashboard-line', component: GraficoLineComponent, canActivate: [AuthGuard]  },
+  { path: 'dashboard-pie', component: GraficoPieComponent, canActivate: [AuthGuard]  },
+  { path: 'dashboard-doughnut', component: GraficoDoughnutComponent, canActivate: [AuthGuard]  },
 
 ];
 

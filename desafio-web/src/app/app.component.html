@@ -6,7 +6,13 @@
   <p-progressSpinner></p-progressSpinner>
 </div>
 
-<div class="menu-top">
-  <p-menu #menu [popup]="true" [model]="items"></p-menu>
-  <button type="button" pButton icon="pi pi-bars" label="Menu" (click)="menu.toggle($event)"></button>
+<div *ngIf="authService.isLogado()" class="menu-top">
+  <button
+    type="button"
+    pButton
+    [icon]="menuAberto ? 'pi pi-times' : 'pi pi-bars'"
+    (click)="toggleMenu($event)">
+  </button>
 </div>
+
+<p-menu #menu [popup]="true" [model]="items" (onHide)="menuAberto = false"></p-menu>

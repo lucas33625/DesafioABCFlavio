@@ -4,6 +4,7 @@ import { MessageService } from 'primeng/api';
 import { saveAs } from 'file-saver';
 import {Router} from "@angular/router";
 import {LoadingService} from "../loading.service";
+import {AuthService} from "../AuthService.service";
 
 @Component({
   selector: 'app-clientes',
@@ -19,16 +20,22 @@ export class ClientesComponent implements OnInit {
     private router: Router,
     private clienteService: ClienteService,
     private messageService: MessageService,
-    private loadingService: LoadingService
+    private loadingService: LoadingService,
+    protected auth: AuthService
   ) {}
 
   ngOnInit() {
-    this.list();
+    this.loadingService.show()
+    setTimeout (() => {
+      this.list();
+    }, 2000);
+
   }
 
   list() {
     this.clienteService.getClientes().subscribe(data => {
       this.clientes = data;
+      this.loadingService.hide()
     });
   }
 
@@ -149,17 +156,6 @@ export class ClientesComponent implements OnInit {
   limparPesquisa() {
     this.nomePesquisa = '';
     this.clientesFiltrados = [];
-  }
-
-  logout() {
-    localStorage.removeItem('usuario');
-    this.messageService.add({
-      severity: 'success',
-      summary: 'Logout realizado',
-      detail: 'Você foi desconectado com sucesso!',
-      life: 3000
-    });
-    this.router.navigate(['/login']);
   }
 
 }

@@ -39,4 +39,34 @@ public class UsuarioDAO {
         return false;
     }
 
+    public Usuario autenticarUsuario(String usuario, String senha) {
+        String sql = "SELECT * FROM usuarios WHERE usuario = ? AND senha = ?";
+
+        try (Connection conn = ConexaoBD.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, usuario);
+            stmt.setString(2, senha);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    // Se encontrou o usuário, cria e retorna o objeto Usuario
+                    Usuario u = new Usuario();
+                    u.setId(rs.getLong("id")); // ou o nome da coluna do id
+                    u.setUsuario(rs.getString("usuario"));
+                    u.setSenha(rs.getString("senha"));
+                    // preencha outros campos se tiver
+                    return u;
+                } else {
+                    // Nenhum usuário encontrado com essas credenciais
+                    return null;
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 }

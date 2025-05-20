@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 public class ConexaoBD {
     private static final String URL = "jdbc:mysql://localhost:3306/desafiodb";
-    private static final String USER = "lucas";
+    private static final String USER = "root";
     private static final String PASSWORD = "1234567";
 
     public static Connection getConnection() {

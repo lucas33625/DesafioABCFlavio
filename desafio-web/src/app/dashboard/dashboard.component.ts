@@ -36,10 +36,13 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.clienteService.getClientes().subscribe(clientes => {
-      this.grafico(clientes);
-    });
+    setTimeout(() => {
+      this.clienteService.getClientes().subscribe(clientes => {
+        this.grafico(clientes);
+      });
+    }, 5000);
   }
+
 
   grafico(clientes: any[]) {
     const faixas = {
@@ -68,5 +71,4 @@ export class DashboardComponent implements OnInit {
       faixas.Idoso
     ];
   }
-
 }
